@@ -5,9 +5,9 @@
 
   [string] $location = "North Europe",
 
-  [string] $hubNamespaceName = "eh-namespace-test",
+  [string] $hubNamespaceName = "eh-balazs-namespace-test",
 
-  [string] $hubName = "test-hub",
+  [string] $hubName = "test-balazs-hub",
 
   [string] $sku = "Basic"
 )
@@ -25,7 +25,7 @@ $jsonResponse = az eventhubs namespace exists --name $hubNamespaceName | Convert
 
 if ($jsonResponse.nameAvailable)
 {
-    Write-Host "Creating EventHubs Namespace: " $hubNamespaceName
+    Write-Host "Creating Namespace: " $hubNamespaceName
 
     az eventhubs namespace create --name $hubNamespaceName --resource-group $resGroupName --sku $sku --location $location
 }
@@ -43,4 +43,20 @@ if (!($hubList -contains $hubName))
         --partition-count 4 `
         --cleanup-policy Delete `
         --retention-time-in-hours 1
+
+    az eventhubs eventhub authorization-rule create  `
+        --resource-group $resGroupName `
+        --namespace-name $hubNamespaceName `
+        --eventhub-name $hubName `
+        --name SendListen `
+        --rights Send Listen
+
+    $response = az eventhubs eventhub authorization-rule keys list `
+        --authorization-rule-name SendListen `
+        --eventhub-name $hubName `
+        --namespace-name $hubNamespaceName `
+        --resource-group $resGroupName `
+        --query "primaryConnectionString"
+
+    Write-Host "Connection string: " $response
 }
