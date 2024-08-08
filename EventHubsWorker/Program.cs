@@ -9,7 +9,7 @@ public static class Program
     {
         var builder = Host.CreateApplicationBuilder(args);
 
-        IServiceCollection services = builder.Services;
+        IServiceCollection services  = builder.Services;
         IConfiguration configuration = builder.Configuration;
 
         string connectionString = configuration.GetConnectionString("EventHubs")!;
