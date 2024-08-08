@@ -18,6 +18,8 @@ public static class Program
         {
             services.AddHostedService<ProducerWorker>();
 
+            // You can add the producer-client with the hub SAS-ConnString
+            // BUT: If you use the namespace SAS-ConnString, you need to provide the EventHubName, when you add producer-client
             services.AddAzureClients(clients => clients.AddEventHubProducerClient(connectionString));
         }
 
