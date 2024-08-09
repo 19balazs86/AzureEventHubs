@@ -1,25 +1,51 @@
+using Azure.Messaging.EventHubs;
 using Azure.Messaging.EventHubs.Producer;
+using EventHubsWorker.Miscellaneous;
 
 namespace EventHubsWorker.Workers;
 
 public sealed class ProducerWorker : BackgroundService
 {
-    private readonly ILogger<ProducerWorker> _logger;
+    private readonly EventHubProducerClient _producerClient;
 
-    private readonly EventHubProducerClient _eventHubProducerClient;
-
-    public ProducerWorker(ILogger<ProducerWorker> logger, EventHubProducerClient eventHubProducerClient)
+    public ProducerWorker(EventHubProducerClient producerClient)
     {
-        _logger = logger;
-
-        _eventHubProducerClient = eventHubProducerClient;
+        _producerClient = producerClient;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await Task.Delay(1_000);
+            EventData[] events = createEventData(5).ToArray();
+
+            using EventDataBatch eventBatch = await _producerClient.CreateBatchAsync();
+
+            foreach (EventData eventData in events)
+            {
+                if (!eventBatch.TryAdd(eventData))
+                {
+                    throw new ApplicationException("Not all events could be added to the batch!");
+                }
+            }
+
+            await _producerClient.SendAsync(eventBatch, stoppingToken);
+
+            // await _producerClient.SendAsync(events, stoppingToken); // Simply send a list of events
+
+            await Task.WhenAny(Task.Delay(Random.Shared.Next(3_000, 5_000), stoppingToken));
+        }
+    }
+
+    private static IEnumerable<EventData> createEventData(int number)
+    {
+        for (int i = 0; i < number; i++)
+        {
+            WeatherForecast weatherForecast = WeatherForecast.Create();
+
+            BinaryData binaryData = BinaryData.FromObjectAsJson(weatherForecast);
+
+            yield return new EventData(binaryData);
         }
     }
 }
