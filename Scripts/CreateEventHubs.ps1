@@ -32,7 +32,7 @@ if ($jsonResponse.nameAvailable)
 
 $hubList = az eventhubs eventhub list --namespace-name $hubNamespaceName --resource-group $resGroupName | ConvertFrom-Json
 
-if (!($hubList -contains $hubName))
+if ($hubList -notcontains $hubName)
 {
     Write-Host "Creating EventHub: " $hubName
 
