@@ -33,7 +33,7 @@ public sealed class ProducerWorker : BackgroundService
 
             // await _producerClient.SendAsync(events, stoppingToken); // Simply send a list of events
 
-            await Task.WhenAny(Task.Delay(Random.Shared.Next(3_000, 5_000), stoppingToken));
+            await Task.WhenAny(Task.Delay(10_000, stoppingToken));
         }
     }
 
