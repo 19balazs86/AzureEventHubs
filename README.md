@@ -2,6 +2,21 @@
 
 This repository contains a project for sending and processing events.
 
+## Prerequisites
+
+- You can find a [CreateEventHubs.ps1](Scripts/CreateEventHubs.ps1) script file, that will manage all creation process on Azure
+- Create an *Event Hubs Namespace* and an *Event Hub*
+- In the newly created Hub instance, open the Shared access policies and create a new policy with Send and Listen
+- Copy the PrimaryKey ConnectionString to configure appsettings.json
+- Run locally the Azurite storage emulator (Scripts folder: [AzuriteStart.cmd](Scripts/AzuriteStart.cmd))
+
+```json
+"ConnectionStrings": {
+    "EventHubs": "Use the PrimaryKey ConnectionString from the policy you created",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true"
+}
+```
+
 ## Resources
 
 - [Documentation](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-about) 📚*MS-Learn*| [Pricing](https://azure.microsoft.com/en-us/pricing/details/event-hubs)
