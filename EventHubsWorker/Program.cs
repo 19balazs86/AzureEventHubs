@@ -22,8 +22,9 @@ public static class Program
 
             services.AddAzureClients(clients =>
             {
-                // You can add the producer-client with the hub SAS-ConnString
-                // BUT: If you use the namespace SAS-ConnString, you need to provide the EventHubName, when you add producer-client
+                // Options to use SAS-ConnString:
+                // 1) Use the hub SAS-ConnString directly
+                // 2) Use the namespace SAS-ConnString, but you must provide the EventHubName
                 clients.AddEventHubProducerClient(eventHubConnectionString);
 
                 clients.AddBlobServiceClient(storageConnectionString);
