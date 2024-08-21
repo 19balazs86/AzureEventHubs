@@ -7,4 +7,5 @@ cd /d "c:\program files\microsoft visual studio\2022\community\common7\ide\exten
 REM --> In-memory persistence
 REM azurite.exe --inMemoryPersistence --skipApiVersionCheck
 
-azurite.exe --location "C:\Users\Balazs\AppData\Local\.vstools\azurite" --debug "C:\Users\Balazs\AppData\Local\.vstools\azurite\debug.log" --skipApiVersionCheck
+REM This is the command Visual Studio runs automatically as a service dependency
+azurite.exe --location "%LOCALAPPDATA%\.vstools\azurite" --debug "%LOCALAPPDATA%\.vstools\azurite\debug.log" --skipApiVersionCheck
