@@ -20,6 +20,8 @@ public static class Program
             services.AddHostedService<ProducerWorker>();
             services.AddHostedService<ProcessorWorker>();
 
+            // services.AddHostedService<BlobSasWorker>();
+
             services.AddAzureClients(clients =>
             {
                 // Options to use SAS-ConnString:
